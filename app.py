@@ -6,7 +6,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import pandas as pd
 
-st.title(""" Web Clastering Dengan K-Means \n""")
+st.title(""" Selamat Datang Di Web Clastering Dengan K-Means \n""")
 
 def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     if x.size != y.size:
@@ -39,30 +39,40 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     ellipse.set_transform(transf + ax.transData)
     return ax.add_patch(ellipse)
 
-@st.cache
+
+
+# @st.cache
 def data():
-    dataset = pd.read_csv('Social_Network_Ads.csv')
+    uploaded_file = st.file_uploader("Choose a file")
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_csv('Social_Network_Ads.csv')
+    
+    dataset = df
     X = dataset.iloc[:,[3,4]].values
     return X
-    # X = np.random.normal(0, 1, 500).reshape(-1,2)
-    # return X
     
 X = data()
 
-klaster_slider = st.slider(
+# Sidebar
+with st.sidebar:
+    st.header("Clustering K-Means - Social Network Ads")
+    
+    klaster_slider = st.slider(
         min_value=1, max_value=6, value=2, label="Jumlah Klaster"
-)
-kmeans = KMeans(n_clusters=klaster_slider, random_state=2023).fit(X)
-labels = kmeans.labels_
+    )
+    kmeans = KMeans(n_clusters=klaster_slider, random_state=2023).fit(X)
+    labels = kmeans.labels_
 
-seleksi1 = st.selectbox("Visualisasi Batas Confidence?", [False, True])
-seleksi2 = st.selectbox("Jumlah Standar Deviasi : ", [1,2,3])
+    seleksi1 = st.selectbox("Visualisasi Batas Confidence", [False, True])
+    seleksi2 = st.selectbox("Jumlah Standar Devsiasi : ", [1,2,3])
 
-warna = ["red", "seagreen", "orange", "blue", "yellow", "purple"]
+    warna = ["red", "seagreen", "orange", "blue", "yellow", "purple"]
 
-jumlah_label = len(set(labels))
+    jumlah_label = len(set(labels))
 
-individu = st.selectbox("Subplot Individu?", [False, True])
+    individu = st.selectbox("Subplot Individu", [False, True])
 
 if individu:
     fig, ax = plt.subplots(ncols=jumlah_label)
@@ -92,3 +102,24 @@ for i, yi in enumerate(set(labels)):
         )
 plt.tight_layout()
 st.write(fig)
+
+# Exploratory Dataset
+st.subheader ("Exploratory Dataset")
+uploaded_file = st.file_uploader("Silahkan Pilih File")
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.write(df)
+
+# Add some matplotlib code !
+    fig, ax = plt.subplots()
+    df.hist(
+        bins=6,
+        column="Age",
+        grid=False,
+        figsize=(2, 2),
+        color="#86bf91",
+        zorder=1,
+        rwidth=0.9,
+        ax=ax,
+    )
+    st.write(fig)
