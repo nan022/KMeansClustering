@@ -6,7 +6,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import pandas as pd
 
-st.title(""" Selamat Datang Di Web Clastering Dengan K-Means \n""")
+st.title(""" Selamat Datang Di Web Clastering Dengan Menggunakan K-Means \n""")
 
 def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
     if x.size != y.size:
@@ -43,7 +43,7 @@ def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
 
 # @st.cache
 def data():
-    uploaded_file = st.file_uploader("Choose a file")
+    uploaded_file = st.file_uploader("Upload Dataset Baru")
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
     else:
@@ -73,7 +73,13 @@ with st.sidebar:
     jumlah_label = len(set(labels))
 
     individu = st.selectbox("Subplot Individu", [False, True])
-
+    # st.caption("Dibuat Oleh") 
+    name = '<p color:Black; font-size: 15px;><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><b>Team Project:</b><br/>1. Ronanda Saputra<br/>2. M. Ihsan<br/>3. Faris Upangga </p>'
+    st.markdown(name, unsafe_allow_html=True)
+    
+    footerPage = '<p color:Black; font-size: 1px;><br/><a  href="https://www.linkedin.com/in/ronanda-saputra/" >Copyright © 2023 Nan, Inc.</a></p>'
+    st.caption(footerPage, unsafe_allow_html=True)
+    
 if individu:
     fig, ax = plt.subplots(ncols=jumlah_label)
 else:
